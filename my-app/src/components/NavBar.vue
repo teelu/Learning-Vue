@@ -2,7 +2,7 @@
 <template>
   <nav class="nav">
     <div class="nav-left">
-      <slot name="title"></slot>
+      <h1>{{title}}</h1>
     </div>
 
     <div class="nav-right">
@@ -13,7 +13,7 @@
 
 <script>
   export default {
-
+    props: ['title']
   }
 </script>
 

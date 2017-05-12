@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <nav-bar>
-      <h1 slot="title">OMDB VUE</h1>
+    <nav-bar title="OMDB VUE FINDER">
       <a slot="right-side" class="nav-item" href="#">HOME</a>
     </nav-bar>
     <div class="container">
