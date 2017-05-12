@@ -1,60 +1,65 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <h1></h1>
-    <h2>Essential Links</h2>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://gitter.im/vuejs/vue" target="_blank">Gitter Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-    </ul>
-    <h2>Ecosystem</h2>
-    <ul>
-      <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-      <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-      <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+    <nav-bar>
+      <h1 slot="title">OMDB VUE</h1>
+      <a slot="right-side" class="nav-item" href="#">HOME</a>
+    </nav-bar>
+    <div class="container">
+      <div class="columns content">
+        <form v-on:submit.prevent="onSubmit" class="column is-two-thirds">
+          <div class="field">
+          <label class="label">Movie Name</label>
+          <p class="control">
+            <input class="input" type="text" placeholder="Text input" v-model="searchMovieName">
+          </p>
+
+          <p class="control">
+            <button class="button is-primary">Submit</button>
+          </p>
+        </div>
+        </form>
+        <modal v-show="showMovieModal" @close="showMovieModal=false" v-bind:movies="movies"></modal>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import NavBar from './components/NavBar.vue';
+import Modal from './components/Modal.vue';
+import MovieDialog from './components/MovieDialog.vue';
+
 export default {
   name: 'app',
+  components: {
+    NavBar,
+    Modal,
+    MovieDialog,
+  },
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      searchMovieName: '',
+      showMovieModal: false,
+      results: 0,
+      movies: [],
     }
-  }
+  },
+  methods: {
+    onSubmit: function() {
+      var that = this;
+      axios.get('http://www.omdbapi.com/?s=' + this.searchMovieName)
+      .then(function(response) {
+        that.movies = response.data.Search;
+        console.log(response.data.Search);
+        that.showMovieModal = true;
+      });
+    }
+  },
 }
 </script>
 
 <style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-
-h1, h2 {
-  font-weight: normal;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
-a {
-  color: #42b983;
-}
+  .content {
+    padding: 15px;
+  }
 </style>
